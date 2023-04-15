@@ -1,21 +1,149 @@
-<!-- import React,{useState,useEffect} from 'react';
-import "../home/home.css"
-import {useNavigate} from "react-router-dom"
-function Home({prod,handle}) {
-const navigate=useNavigate()
-  return (
-    <div className='home'>
-      {prod.map((e) => (
-        <div key={e.id} className="producte">
-          <img className="imge" src={e.imageUrl} alt="img" />
-          <h2>{e.name}</h2>
-          
-           <button onClick={()=>{navigate("/")
-                                 handle(e)}}  >Buy</button>
-          <span>${e.price}</span>
-        </div>
-      ))}
+<template>
+  <div class="home">
+    <div v-for="e in prod" :key="e.id" class="producte">
+      <img class="imge" :src="e.imageUrl" alt="img" />
+      <h2>{{ e.name }}</h2>
+      <button @click="handle(e); $router.push('/')">Buy</button>
+      <span>${{ e.price }}</span>
     </div>
-  ) }
-        
-export default Home -->
+  </div>
+</template>
+
+<script>
+import { useRoute } from 'vue-router';
+
+export default {
+  name: 'Home',
+  props: {
+    prod: {
+      type: Array,
+      required: true
+    },
+    handle: {
+      type: Function,
+      required: true
+    }
+  },
+  setup() {
+    const route = useRoute();
+
+    return {
+      navigate: () => route.push('/')
+    }
+  }
+}
+</script>
+
+<style>
+.home {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 50px;
+  }
+  
+  .producte {
+    width: 300px;
+    margin: 20px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  .imge {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    margin-bottom: 20px;
+  }
+  
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  span {
+    font-size: 20px;
+    font-weight: bold;
+    color: #f60;
+  }
+
+  
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 0 20px;
+  }
+  
+  .logo {
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #333;
+    text-decoration: none;
+    margin-right: 20px;
+  }
+  
+  .logo:hover {
+    color: #f60;
+  }
+  
+  /* Style the active link */
+  .logo.active {
+    color: #f60;
+  }
+  
+  /* Style the search bar */
+  .search-bar {
+    width: 300px;
+    margin-right: 20px;
+  }
+  
+  .search-input {
+    width: 100%;
+    height: 30px;
+    border-radius: 20px;
+    border: none;
+    padding: 5px 10px;
+    font-size: 16px;
+    outline: none;
+  }
+  
+  .search-button {
+    background-color: #f60;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 25px;
+  }
+  
+</style>
+
+

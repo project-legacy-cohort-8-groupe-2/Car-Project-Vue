@@ -1,142 +1,100 @@
-<!-- import React,{useState,useEffect} from 'react';
-import { BrowserRouter, Routes, Route,useNavigate } from "react-router-dom";
-import axios from 'axios'
-import AdminInterface from './Component/AdminInterface';
-import UserInterface from './Component/UserInterface';
-import Add from './Component/Add';
-import Update from './Component/Update';
-import Home from './Component/home/Home';
-import Card from './Component/Card';
-import Signup from './Component/Signup/Signup';
-import Login from './Component/Login/Login';
-import Search from './Component/Search';
-import './App.css';
-
-import { auth } from "./firebase";
-function App() {
- const [product,setProduct]= useState([]);
- const[toggle,setToggle]= useState(false);
- const [userName, setUserName] = useState("");
- const [productfiltred,setProductFiltred ] = useState("")
- const[Cardprod,setCardprod]=useState([])
-//  const [handelfilter,setHandelfilter] = useState(false)
- const handelToggle=()=>{
-  setToggle(!toggle)
- }
- 
-
- useEffect(() => {
-  const fetshProduct = async () => {
-    try {
-      const res = await axios.get("http://localhost:5002/api/product");
-      setProduct(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  fetshProduct();
-}, [toggle]);
-
-
- console.log(productfiltred);
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUserName(user.displayName);
-      } else setUserName("");
-    });
-  }, []);
-  const handleSearch = (event) => {
-    setProductFiltred(event.target.value)
-  };
-  const handelSubmit=(event)=>{
-    event.preventDefault();
-    const productfilt = product.filter((e,i)=>{
-      return (e.name.toLowerCase()).includes( productfiltred.toLowerCase())
-    });
-    setProduct(productfilt)
-  };
-  const hadlecard=(prod)=>{
-    setCardprod(prod)
-  }
-
-  return (
-   <div>
-    <div>
-    <div className='nav'> 
-    <a href='/home' className="logo" >home</a>
-         <a href='/signup' className="logo" >Signup</a>
-         <a href='/login' className="logo" >login</a>
-         
-           <Search  search={handelSubmit} handelsearch={handleSearch}/>
-        </div>
-    </div>
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/adminSpace" element={<AdminInterface handeltoggle={handelToggle} prod={product} />} />
-          {/* <Route path="/" element={<UserInterface handle={hadlecard} product={product}/>} /> */}
-          <Route path="/add" element={<Add handeltoggle={handelToggle}/>} />
-          <Route path="/update/:id" element={<Update  handeltoggle={handelToggle}/>} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/" element={<Card data={Cardprod} />} />
-          <Route path="/home" element={<Home handle={hadlecard} name={userName} prod={product} />} />
-        </Routes>
-
-      </BrowserRouter>
-    </div>
-  </div> 
-  );
-}
-
-export default App; -->
-
-
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+  <div>
+    <div>
+      <div class="nav">
+        <router-link to="/home" class="logo">home</router-link>
+        <router-link to="/signup" class="logo">Signup</router-link>
+        <router-link to="/login" class="logo">login</router-link>
+        <search @submit="handelSubmit" v-model="productfiltred"/>
+      </div>
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+    <div class="App">
+      <router-view :prod="product" :handle="hadlecard" />
+    </div>
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
+<script>
+import axios from 'axios'
+import AdminInterface from './Component/AdminInterface.vue'
+import UserInterface from './Component/UserInterface.vue'
+import Add from './Component/Add.vue'
+import Update from './Component/Update.vue'
+import Home from './Component/home/Home.vue'
+import Card from './Component/Card.vue'
+import Signup from './Component/Signup/Signup.vue'
+import Login from './Component/Login/Login.vue'
+import Search from './Component/Search.vue'
+import { auth } from "./firebase";
+
+export default {
+  name: 'App',
+  components: {
+    AdminInterface,
+    UserInterface,
+    Add,
+    Update,
+    Home,
+    Card,
+    Signup,
+    Login,
+    Search,
+  },
+  data() {
+    return {
+      product: [],
+      toggle: false,
+      userName: "",
+      productfiltred: "",
+      Cardprod: [],
+    }
+  },
+  methods: {
+    handelToggle() {
+      this.toggle = !this.toggle
+    },
+    async fetchProduct() {
+      try {
+        const res = await axios.get("http://localhost:5002/api/product");
+        this.product = res.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    handleSearch(event) {
+      this.productfiltred = event.target.value
+    },
+    handelSubmit(event) {
+      event.preventDefault();
+      const productfilt = this.product.filter((e,i)=>{
+        return (e.name.toLowerCase()).includes( this.productfiltred.toLowerCase())
+      });
+      this.product = productfilt
+    },
+    hadlecard(prod) {
+      this.Cardprod = prod
+    },
+  },
+  mounted() {
+    this.fetchProduct()
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        this.userName = user.displayName;
+      } else {
+        this.userName = "";
+      }
+    });
+  },
+  router: {
+    routes: [
+      { path: '/adminSpace', component: AdminInterface, props: { handeltoggle: this.handelToggle, prod: this.product } },
+      { path: '/add', component: Add, props: { handeltoggle: this.handelToggle } },
+      { path: '/update/:id', component: Update, props: { handeltoggle: this.handelToggle } },
+      { path: '/login', component: Login },
+      { path: '/signup', component: Signup },
+      { path: '/', component: Card, props: { data: this.Cardprod } },
+      { path: '/home', component: Home, props: { handle: this.hadlecard, name: this.userName, prod: this.product } },
+    ]
+  },
 }
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
+</script>

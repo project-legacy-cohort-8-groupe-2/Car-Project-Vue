@@ -1,89 +1,55 @@
-<!-- // import React,{useState} from 'react';
-// import {link , useNavigate} from 'react-router-dom';
-// import axios from 'axios';
 
-
-// const Add = ({handeltoggle}) => {
-
-//  const [addProduct,setAddProduct]=useState({
-//   name:"",
-//   description:"",
-//   price:0,
-//   imageUrl:"",
-//   category:""
-//  });
-//  const navigate=useNavigate()
-    
-//  const handleClick = async (e) => {
-//   e.preventDefault();
-//   try {
-//     await axios.post("http://localhost:5002/api/product/add", addProduct);
-//     navigate("/adminSpace");
-//     handeltoggle()
-//   } catch (err) {
-//     console.log(err);
+<template>
+    <div class="form">
+      <h1>Add</h1>
+      <form @submit.prevent="handleSubmit">
+        <label>
+          Name:
+          <input v-model="addProduct.name" type="text" placeholder="Enter name" />
+        </label>
+        
+        <label>
+          Price:
+          <input v-model.number="addProduct.price" type="number" placeholder="Enter Price" />
+        </label>
+        <label>
+          Image:
+          <input v-model="addProduct.imageUrl" type="text" placeholder="Enter Image" />
+        </label>
+        <label>
+          Category:
+          <input v-model="addProduct.category" type="text" placeholder="Enter Category" />
+        </label>
+        <button type="submit">Add product</button>
+      </form>
+    </div>
+  </template>
   
-//   }
-// };
-
-
-
-
-//   return (
-//     <div className="forme">
-//       <ul>
-//       <h1>Add</h1>
-      
-//       <input 
-//       type='text'
-//       label='Name'
-//       onChange={(e)=>{
-//         setAddProduct((prev)=>({...prev,name:e.target.value}))
-//       }}
-//       placeholder='Enter name'
-//       />
-//       <textarea
-//        className='textarea'
-//         rows={5}
-//         type="text"
-//         placeholder="Enter Description"
-//         name="Description"
-//         onChange={(e)=>{
-//           setAddProduct((prev)=>({...prev,description:e.target.value}))
-//         }}
-//       />
-      
-//       <input 
-//       className='input'
-//       type='number'
-//       label='Price'
-//       onChange={(e)=>{
-//         setAddProduct((prev)=>({...prev,price:e.target.value}))
-//       }}
-//       placeholder='Enter Price'
-//       />
-//       <input 
-//       className='input'
-//       type='text'
-//       label='image'
-//       onChange={(e)=>{
-//         setAddProduct((prev)=>({...prev,imageUrl:e.target.value}))
-//       }}
-//       placeholder='Enter Image'
-//       />
-//       <input 
-//       className='input'
-//       type='text'
-//       label='Category'
-//       onChange={(e)=>{
-//         setAddProduct((prev)=>({...prev,category:e.target.value}))
-//       }}
-//       placeholder='Enter Categoey'
-//       />
-//         <button className='button' onClick={handleClick}>Add product</button>
-//         </ul>
-//     </div>
-//   )
-// }
-
-// export default Add -->
+  <script>
+  import { reactive } from 'vue';
+  import axios from 'axios';
+  
+  export default {
+    setup() {
+      const addProduct = reactive({
+        name: '',
+        description: '',
+        price: 0,
+        imageUrl: '',
+        category: '',
+      });
+  
+      const handleSubmit = async () => {
+        try {
+          await axios.post('http://localhost:5002/api/product/add', addProduct);
+          // Navigate to admin space
+        } catch (err) {
+          console.log(err);
+        }
+      };
+  
+      return { addProduct, handleSubmit };
+    },
+  };
+  </script>
+  

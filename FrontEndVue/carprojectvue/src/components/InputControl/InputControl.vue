@@ -1,14 +1,30 @@
-import React from "react";
+<template>
+  <div class="container">
+    <label v-if="label">{{ label }}</label>
+    <input type="text" v-model="props" :placeholder="placeholder" v-bind="$props" />
+  </div>
+</template>
 
-import styles from "./InputControl.module.css";
+<script>
+export default {
+  props: {
+    label: String,
+    placeholder: String,
+  },
+};
+</script>
 
-function InputControl(props) {
-  return (
-    <div className={styles.container}>
-      {props.label && <label>{props.label}</label>}
-      <input type="text" {...props} />
-    </div>
-  );
+<style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
 }
 
-export default InputControl;
+input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+</style>
+

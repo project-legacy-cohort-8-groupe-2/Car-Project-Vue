@@ -1,83 +1,89 @@
 
+
+
 <template>
-  <div class="update">
-    <h1>Update</h1>
-    <input
-      type="text"
-      label="Name"
-      v-model="updateProduct.name"
-      placeholder="Enter name"
-    />
-    <textarea
-      class="textarea"
-      rows="5"
-      type="text"
-      placeholder="Enter Description"
-      name="Description"
-      v-model="updateProduct.description"
-    ></textarea>
-
-    <input
-      class="input"
-      type="number"
-      label="Price"
-      v-model="updateProduct.price"
-      placeholder="Enter Price"
-    />
-    <input
-      class="input"
-      type="text"
-      label="image"
-      v-model="updateProduct.imageUrl"
-      placeholder="Enter Image"
-    />
-    <input
-      class="input"
-      type="text"
-      label="Category"
-      v-model="updateProduct.category"
-      placeholder="Enter Category"
-    />
-    <button class="button" @click="handleClick">Update</button>
-  </div>
-</template>
-
-<script>
-import axios from 'axios';
-
-export default {
-  name: 'Update',
-  props: {
-    handeltoggle: {
-      type: Function,
-      required: true
-    }
-  },
-  data() {
-    return {
-      updateProduct: {
-        name: "",
-        description: "",
+    <div class="update">
+      <h1>Update</h1>
+      <form>
+        <div class="form-group">
+          <label>Name:</label>
+          <input v-model="updateProduct.name" type="text" class="form-control" placeholder="Enter name" />
+        </div>
+       
+        <div class="form-group">
+          <label>Price:</label>
+          <input v-model="updateProduct.price" type="number" class="form-control" placeholder="Enter Price" />
+        </div>
+        <div class="form-group">
+          <label>Image:</label>
+          <input  v-model="updateProduct.imageUrl" type="text" class="form-control" placeholder="Enter Image" />
+        </div>
+        <div class="form-group">
+          <label>Category:</label>
+          <input v-model="updateProduct.category" type="text" class="form-control" placeholder="Enter Category" />
+        </div>
+        <button class="btn btn-primary" @click="handleClick">Update</button>
+      </form>
+    </div>
+  </template>
+  
+  <script>
+  import axios from 'axios'
+  import { computed, reactive } from 'vue'
+  import {useRouter} from 'vue-router'
+  export default {
+    // name:"update",
+    
+    props:{
+      id:{
+        type : String,
+        required : true
+      }
+    },
+    
+    setup(props) {
+    const router=useRouter()
+      const updateProduct = reactive({
+        name: '',
+        description: '',
         price: 0,
-        imageUrl: "",
-        category: ""
-      }
+        imageUrl: '',
+        category: ''
+      })
+  
+      // const handleClick = async () => {
+      //   try {
+          
+      //     await axios.put(`http://localhost:5002/api/rent/update/${id}`, updateProduct)
+      //     this.$router.push("/admin")
+        
+      //   } catch (err) {
+      //     console.log(err)
+      //   }
+      // }
+  
+      return { updateProduct }
+    },
+    methods:{
+      handleClick : async function (){ 
+        
+        try {
+           await axios.put(`http://localhost:5002/api/rent/update/3`, this.updateProduct)
+            router.push("/admin")
+            
+           }
+
+             catch (err) {
+               console.log(err) 
+               alert('There was an error updating the rent. Please try again.') 
+               router.push("/admin") 
+              }
+               },
+              //  log : function (){
+              //   console.log(this.router.params.id,'success');
+              //  }
     }
-  },
-  methods: {
-    async handleClick() {
-      const productId = this.$route.params.id;
-      try {
-        await axios.put(
-          `http://localhost:5002/api/rent/update/${productId}`,
-          this.updateProduct
-        );
-        this.$router.push("/adminSpace");
-        this.handeltoggle()
-      } catch (err) {
-        console.log(err);
-      }
-    }
+
   }
-}
-</script>
+  </script>
+  

@@ -1,40 +1,38 @@
+
 <template>
+  
   <div class="home">
-    <div v-for="e in prod" :key="e.id" class="producte">
-      <img class="imge" :src="e.imageUrl" alt="img" />
-      <h2>{{ e.name }}</h2>
-      <button @click="handle(e); $router.push('/')">Buy</button>
-      <span>${{ e.price }}</span>
+    <div v-for="prod in product" :key="prod.id" class="product">
+      <img class="image" :src="prod.imageUrl" alt="Product image" />
+      <h2>{{ prod.name }}</h2>
+      <button class="button" @click="buyProduct(product)">Buy</button>
+      <span>${{ prod.price }}</span>
     </div>
   </div>
 </template>
 
 <script>
-import { useRoute } from 'vue-router';
-
+;
 export default {
-  name: 'Home',
   props: {
-    prod: {
+    product: {
       type: Array,
-      required: true
+      required: true,
     },
-    handle: {
-      type: Function,
-      required: true
-    }
   },
-  setup() {
-    const route = useRoute();
+  setup(props, { router }) {
+    console.log(props,'ronaldo')
+    const buyProduct = (product) => {
+      router.push('/');
+      props.handle(product);
+    };
 
-    return {
-      navigate: () => route.push('/')
-    }
-  }
-}
+    return { buyProduct };
+  },
+};
 </script>
 
-<style>
+<style scoped>
 .home {
     display: flex;
     flex-wrap: wrap;
@@ -43,7 +41,7 @@ export default {
     margin: 50px;
   }
   
-  .producte {
+  .product {
     width: 300px;
     margin: 20px;
     padding: 20px;
@@ -52,7 +50,7 @@ export default {
     text-align: center;
   }
   
-  .imge {
+  .image {
     width: 100%;
     height: 200px;
     object-fit: cover;
@@ -144,6 +142,5 @@ export default {
     border-radius: 25px;
   }
   
+  
 </style>
-
-

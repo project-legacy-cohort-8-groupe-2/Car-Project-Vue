@@ -1,87 +1,194 @@
-<!-- import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+<template>
+  <div class="container">
+    <div class="inner-box">
+      <h1 class="heading">Signup</h1> 
+       <label>name</label>
+      <input  placeholder="Enter your name"  @input="log" v-model="values.name" /> 
+      <label>email</label>
+      <input  placeholder="Enter email address" v-model="values.email" />
+      <label>password</label> 
+      <input  placeholder="Enter password" v-model="values.pass" /> 
+
+      <div class="footer">
+        <b class="error">{{ errorMsg }}</b> 
+        <button @click="handleSubmission" :disabled="submitButtonDisabled">Signup</button> 
+        <p> 
+          Already have an account? 
+          <span>
+            <router-link to="/login">Login</router-link> 
+          </span> 
+        </p> 
+      </div> 
+    </div> 
+  </div> 
+</template> 
+
+<script> 
+import InputControl from "../InputControl/InputControl.vue"; 
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-
-import InputControl from "../InputControl/InputControl";
+import { useRouter } from "vue-router";
+import { reactive, ref } from "vue";
 import { auth } from "../../firebase";
+export default { 
+  name: "Signup", 
+  components: { 
+    InputControl, 
+  }, 
+  
+  setup() {
+   const router=useRouter()
+    const values = reactive({
+      email: "",
+      name:"",
+      pass: "",
+    });
+    const errorMsg = ref("");
+    const submitButtonDisabled = ref(false);
 
-import styles from "./Signup.module.css";
+   const handleSubmission=()=> { 
+      if (!values.name || !values.email || !values.pass) { 
+        errorMsg.value = "Fill all fields"; 
+        return; 
+      } 
+      errorMsg.value = ""; 
 
-function Signup() {
-  const navigate = useNavigate();
-  const [values, setValues] = useState({
-    name: "",
-    email: "",
-    pass: "",
-  });
-  const [errorMsg, setErrorMsg] = useState("");
-  const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
-
-  const handleSubmission = () => {
-    if (!values.name || !values.email || !values.pass) {
-      setErrorMsg("Fill all fields");
-      return;
+      submitButtonDisabled.value = true; 
+      createUserWithEmailAndPassword(auth, values.email, values.pass) 
+        .then(async (res) => { 
+          submitButtonDisabled.value = false; 
+          const user = res.user; 
+          await updateProfile(user, { 
+            displayName: values.name, 
+          }); 
+          router.push("/login"); 
+        }) 
+        .catch((err) => { 
+          submitButtonDisabled.value = false; 
+          errorMsg.value = err.message; 
+        }); 
     }
-    setErrorMsg("");
-
-    setSubmitButtonDisabled(true);
-    createUserWithEmailAndPassword(auth, values.email, values.pass)
-      .then(async (res) => {
-        setSubmitButtonDisabled(false);
-        const user = res.user;
-        await updateProfile(user, {
-          displayName: values.name,
-        });
-        navigate("/");
-      })
-      .catch((err) => {
-        setSubmitButtonDisabled(false);
-        setErrorMsg(err.message);
-      });
-  };
-
-  return (
-    <div className={styles.container}>
-      <div className={styles.innerBox}>
-        <h1 className={styles.heading}>Signup</h1>
-
-        <InputControl
-          label="Name"
-          placeholder="Enter your name"
-          onChange={(event) =>
-            setValues((prev) => ({ ...prev, name: event.target.value }))
-          }
-        />
-        <InputControl
-          label="Email"
-          placeholder="Enter email address"
-          onChange={(event) =>
-            setValues((prev) => ({ ...prev, email: event.target.value }))
-          }
-        />
-        <InputControl
-          label="Password"
-          placeholder="Enter password"
-          onChange={(event) =>
-            setValues((prev) => ({ ...prev, pass: event.target.value }))
-          }
-        />
-
-        <div className={styles.footer}>
-          <b className={styles.error}>{errorMsg}</b>
-          <button onClick={handleSubmission} disabled={submitButtonDisabled}>
-            Signup
-          </button>
-          <p>
-            Already have an account?{" "}
-            <span>
-              <Link to="/login">Login</Link>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-  );
+    return { values, errorMsg, submitButtonDisabled, handleSubmission };
+  },
+  methods:{
+    log(){
+      console.log(this.values.name,'hhh');
+    }
+  } 
 }
 
-export default Signup; -->
+</script>
+<style>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #121212;
+  color: #fff;
+}
+
+.inner-box {
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  padding: 30px;
+  width: 400px;
+}
+
+.heading {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #fff;
+}
+
+input {
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
+  width: 100%;
+  background-color: #2e2e2e;
+  color: #fff;
+}
+
+button {
+  background-color: #1db954;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+button:hover {
+  background-color: #1ed760;
+}
+
+.error {
+  color: #f44336;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.footer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+p {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #fff;
+}
+
+span {
+  margin-left: 5px;
+}
+
+.router-link {
+  color: #1db954;
+  text-decoration: none;
+}
+
+.router-link:hover {
+  text-decoration: underline;
+}
+
+.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
+
+.dark-mode .inner-box {
+  background-color: #222;
+}
+
+.dark-mode label,
+.dark-mode input,
+.dark-mode .router-link {
+  color: #fff;
+}
+
+.dark-mode button {
+  background-color: #1db954;
+  color: #fff;
+}
+
+.dark-mode button:hover {
+  background-color: #1ed760;
+}
+
+</style>

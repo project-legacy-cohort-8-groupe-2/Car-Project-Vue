@@ -1,24 +1,29 @@
-// import React from 'react'
-
-// function Card({data}) {
-//   return (
-//     <div>
-//     <h1>your cart</h1>
-    
-// <div className='card-container'>
-//           <div className='card-pay'>
-//           <p className='name-product'> {data.name}</p>
-//           <p className='name-product'>description:{data.description} </p>
-//           <p className='name-product'>price:{data.price}$</p>
-//           <p className='price-product'>Success</p>
-
-//         </div>
-        
-      
-    
-//     </div>
-//     </div>
-//     )}
-
-
-// export default Card
+<template>
+    <div>
+      <h1>Your Cart</h1>
+      <div class="card-container">
+        <div class="card-pay">
+          <p class="name-product">{{ data.name }}</p>
+          <p class="name-product">Description: {{ data.description }}</p>
+          <p class="name-product">Price: {{ data.price }}$</p>
+          <p class="price-product">Success</p>
+        </div>
+      </div>
+    </div>
+  </template>
+  
+  <script>
+  export default {
+    props: {
+      data: {
+        type: Object,
+        required: true,
+      },
+    },
+  };
+  </script>
+  
+  <style>
+    /* add your styles here */
+  </style>
+  

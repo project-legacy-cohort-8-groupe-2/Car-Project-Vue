@@ -1,21 +1,63 @@
-<!-- // import React,{useState} from 'react'
-// const Search = ({search ,  handelsearch}) => {
-    
+
+<template>
+    <form @submit.prevent="searchProducts" class="searchForm">
+      <div style="display: flex">
+        <input @input="log" v-model="searchTerm" type="text" class="search" placeholder="Looking for..." />
+        <button class="searchButton" type="submit">Search</button>
+      </div>
+    </form>
+  </template>
+  
+  <script>
+  export default {
+    props: {
+      handleSearch: Function,
+    },
+    data() {
+      return {
+        searchTerm: '',
+      };
+    },
+    methods: {
  
-//     return (
-//         <form onSubmit={(e)=>{search(e)}} className='searchForm'>
-//             <div style={{display: 'flex'}}>
-//             <input onChange={(e)=>{handelsearch(e)}} type="text" className='search' placeholder="looking for ..."  /> 
-//             <button  className='searchButton' type='submit' > search</button>
-//             </div>
-//         </form>
-//         // <div className='box'>
-            
-//         //     <input type="text" placeholder="looking for ..."  />
-//         //     <a href='#'>
-//         //         <i className='fas fa-search'></i>
-//         //     </a>
-//         // </div>
-//     )
-// }
-// export default Search -->
+      searchProducts() {
+        
+       const searchterm=""
+       this.$emit('serached')
+      },
+    },
+  };
+  </script>
+  
+  <style scoped>
+  .searchForm {
+    margin-bottom: 20px;
+  }
+  
+  .search {
+    height: 40px;
+    padding: 0 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 10px;
+    width: 100%;
+  }
+  
+  .searchButton {
+    background-color: #4caf50;
+    color: #fff;
+    height: 40px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100px;
+  }
+  
+  .searchButton:hover {
+    background-color: #4caf50c7;
+  }
+  </style>
+  
